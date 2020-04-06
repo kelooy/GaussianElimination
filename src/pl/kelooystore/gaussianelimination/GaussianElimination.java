@@ -2,51 +2,52 @@ package pl.kelooystore.gaussianelimination;
 
 public class GaussianElimination {
 
-    public static double[] solveMatrix(double[][] A, double[] b) {
+    public static double[] solveMatrix(double[][] matrixA, double[] matrixB) {
         final double EPSILON = 1e-10;
-        int n = b.length;
+        final int n = matrixB.length;
 
-        for (int p = 0; p < n; p++) {
+        for (int k = 0; k < n; k++) {
             // find pivot row
-            int max = p;
-            for (int i = p + 1; i < n; i++) {
-                if (Math.abs(A[i][p]) > Math.abs(A[max][p])) {
+            // set row with highest coefficient on the top
+            int max = k;
+            for (int i = k + 1; i < n; i++) {
+                if (Math.abs(matrixA[i][k]) > Math.abs(matrixA[max][k])) {
                     max = i;
                 }
             }
 
-            // swap with pivot row
-            double[] temp = A[p];
-            A[p] = A[max];
-            A[max] = temp;
-            double t = b[p];
-            b[p] = b[max];
-            b[max] = t;
+            // swap row with pivot row
+            double[] temp = matrixA[k];
+            matrixA[k] = matrixA[max];
+            matrixA[max] = temp;
+            double t = matrixB[k];
+            matrixB[k] = matrixB[max];
+            matrixB[max] = t;
 
-            // singular or nearly singular
-            if (Math.abs(A[p][p]) <= EPSILON) {
-                throw new ArithmeticException("Matrix is singular or nearly singular");
+            // check if matrix is singular
+            if (Math.abs(matrixA[k][k]) <= EPSILON) {
+                throw new ArithmeticException("Matrix is singular!");
             }
 
-            // pivot within A and b
-            for (int i = p + 1; i < n; i++) {
-                double alpha = A[i][p] / A[p][p];
-                b[i] -= alpha * b[p];
-                for (int j = p; j < n; j++) {
-                    A[i][j] -= alpha * A[p][j];
+            // achieve upper triangular matrix
+            for (int i = k + 1; i < n; i++) {
+                double alpha = matrixA[i][k] / matrixA[k][k];
+                matrixB[i] -= alpha * matrixB[k];
+                for (int j = k; j < n; j++) {
+                    matrixA[i][j] -= alpha * matrixA[k][j];
                 }
             }
         }
 
-        // back substitution
-        double[] x = new double[n];
+        // back-substitution
+        double[] outputMatrix = new double[n];
         for (int i = n - 1; i >= 0; i--) {
-            double sum = 0.0;
+            double sum = 0;
             for (int j = i + 1; j < n; j++) {
-                sum += A[i][j] * x[j];
+                sum += matrixA[i][j] * outputMatrix[j];
             }
-            x[i] = (b[i] - sum) / A[i][i];
+            outputMatrix[i] = (matrixB[i] - sum) / matrixA[i][i];
         }
-        return x;
+        return outputMatrix;
     }
 }

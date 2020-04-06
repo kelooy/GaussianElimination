@@ -1,15 +1,13 @@
 package pl.kelooystore.gaussianelimination;
 
-import jdk.swing.interop.SwingInterOpUtils;
-
 import java.util.Scanner;
-
 import static pl.kelooystore.gaussianelimination.GaussianElimination.solveMatrix;
 
 public class Main {
-    public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
 
         System.out.println("Enter the number of variables: ");
         int n = scanner.nextInt();
@@ -37,11 +35,7 @@ public class Main {
         for (int i = 0; i < n; i++) {
             System.out.println(matrixC[i]);
         }
-
-        System.out.println(matrixA);
-
     }
-
 }
 
 
